@@ -24,7 +24,7 @@ namespace IconResolutionMult
             Logger.LogInfo($"Plugin com.JustNU.IconResolutionMult is loading");
 
             new itemIconPatch().Enable();
-            //new ClothingIconPatch().Enable();
+            new ClothingIconPatch().Enable();
         }
     }
 }

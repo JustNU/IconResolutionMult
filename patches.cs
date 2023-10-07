@@ -35,9 +35,10 @@ namespace IconResolutionMult
     {
         protected override MethodBase GetTargetMethod()
         {
-            var GetClass = PatchConstants.EftTypes.Single(x => x.GetField("_clothingIcon", PatchConstants.PrivateFlags) != null);
+            //var GetClass = PatchConstants.EftTypes.Single(x => x.GetMethod("GetIcon", BindingFlags.Public | BindingFlags.Instance, null, new [] { typeof(GClass2821), typeof(GStruct23).MakeByRefType() }, null) != null );
+            var GetClass = typeof(GClass847);
 
-            return GetClass.GetMethod("Init", BindingFlags.Public | BindingFlags.Instance);
+            return GetClass.GetMethod("GetIcon", BindingFlags.Public | BindingFlags.Instance);
         }
 
         [PatchPrefix]
