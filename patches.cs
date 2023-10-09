@@ -15,8 +15,25 @@ namespace IconResolutionMult
 {
     public class itemIconPatch : ModulePatch
     {
+       public void Update()
+       {
+            if (Plugin.ConfItemIconResMult.Value < 1)
+            {
+                var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "grid_layout(Clone)(Clone)" && obj.activeInHierarchy == true
+                                                                                     /*|| obj.name == "something else"*/);
+                foreach (var iconGameObject in objects)
+                {
+                    var imageChild = iconGameObject.transform.Find("Image");
+
+                    imageChild.transform.localScale = new Vector3(1f / (float)Plugin.ConfItemIconResMult.Value, 1f / (float)Plugin.ConfItemIconResMult.Value, 1f);
+                }
+            }
+        }
+        
         protected override MethodBase GetTargetMethod()
         {
+            Logger.LogInfo("itemIconPatch");
+            
             var GetClass = PatchConstants.EftTypes.Single(x => x.GetMethod("LoadItemIcon", BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static) != null);
 
             return GetClass.GetMethod("LoadItemIcon", BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
@@ -35,16 +52,38 @@ namespace IconResolutionMult
     {
         protected override MethodBase GetTargetMethod()
         {
-            //var GetClass = PatchConstants.EftTypes.Single(x => x.GetMethod("GetIcon", BindingFlags.Public | BindingFlags.Instance, null, new [] { typeof(GClass2821), typeof(GStruct23).MakeByRefType() }, null) != null );
-            var GetClass = typeof(GClass847);
+            Logger.LogInfo("ClothingIconPatch");
+
+            var GetClass = typeof(GClass736);
 
             return GetClass.GetMethod("GetIcon", BindingFlags.Public | BindingFlags.Instance);
         }
 
         [PatchPrefix]
-        private static bool PatchPrefix(GClass2821 clothing, ref GStruct23 textureSize)
+        private static bool PatchPrefix(GClass2736 clothing, ref GStruct23 textureSize)
         {
+
             textureSize = textureSize * Plugin.ConfClothingIconResMult.Value;
+
+            return true;
+        }
+    }
+
+    public class PlayerIconPatch : ModulePatch
+    {
+        protected override MethodBase GetTargetMethod()
+        {
+            Logger.LogInfo("PlayerIconPatch");
+
+            var GetClass = typeof(GClass738);
+
+            return GetClass.GetMethod("method_11", BindingFlags.NonPublic | BindingFlags.Instance);
+        }
+
+        [PatchPrefix]
+        private static bool PatchPrefix(GClass743 iconRequest, ref GStruct23 textureSize)
+        {
+            textureSize = textureSize * Plugin.ConfPlayerIconResMult.Value;
 
             return true;
         }
