@@ -15,21 +15,6 @@ namespace IconResolutionMult
 {
     public class itemIconPatch : ModulePatch
     {
-       public void Update()
-       {
-            if (Plugin.ConfItemIconResMult.Value < 1)
-            {
-                var objects = Resources.FindObjectsOfTypeAll<GameObject>().Where(obj => obj.name == "grid_layout(Clone)(Clone)" && obj.activeInHierarchy == true
-                                                                                     /*|| obj.name == "something else"*/);
-                foreach (var iconGameObject in objects)
-                {
-                    var imageChild = iconGameObject.transform.Find("Image");
-
-                    imageChild.transform.localScale = new Vector3(1f / (float)Plugin.ConfItemIconResMult.Value, 1f / (float)Plugin.ConfItemIconResMult.Value, 1f);
-                }
-            }
-        }
-        
         protected override MethodBase GetTargetMethod()
         {
             Logger.LogInfo("itemIconPatch");
